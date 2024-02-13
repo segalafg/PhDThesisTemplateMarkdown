@@ -1,0 +1,258 @@
+---
+# Document created by Federico G. Segala on 13/09/2023
+output:
+  bookdown::pdf_document2:
+    number_sections: TRUE
+    fig_caption: yes
+    toc: no
+    keep_tex: yes
+link-citations: true
+csl: elife.csl # Here you can set the referencing style that you want. You can download any .csl files from Zotero.
+bibliography: referencesThesis.bib # Here you set your bibliography file that includes all your references.
+header-includes:
+  - \usepackage{tocbibind} # This command allows to include Contents, List of Figures and List of Tables to the Table of Contents. Use \usepackage[nottoc,notlof,notlot]{tocbibind}, if you don't want to include any of those in your ToC.
+  - \usepackage{setspace}\doublespacing # Sets the line space.
+  - \usepackage{indentfirst}\setlength\parindent{24pt} # Set automatic indent at the beginning of each paragraph. \parindent{} sets the size of the indent.
+  - \usepackage{float}
+  - \usepackage{float} \floatplacement{figure}{H}
+  - \usepackage{caption} # Allows to link directly to figures rather than their captions.
+  - \pagenumbering{gobble} # Removes page number from title page.
+  - \newcommand{\chapterone}{\setcounter{table}{0} # Allows to personalise the numbering of tables for a specific chapter. A new command needs to be created for every chapter. Than name of the command {\chapterone} can only include letters.
+  - \renewcommand{\thetable}{1.\arabic{table}} # Here, we define the number personalisation for tables. The tables will be numbered: Table 1.1, Table 1.2...
+  - \setcounter{figure}{0} # Allows to personalise the numbering of figures.
+  - \renewcommand{\thefigure}{1.\arabic{figure}}} # Here, we define the number personalisation for figures. It works the same as \renewcommand{\thetable}.
+  - \newcommand{\beginsupplementAone}{\setcounter{table}{0} # Here, we define the number personalisation for our first Appendix. Letters can also be used. 
+  - \renewcommand{\thetable}{A1.\arabic{table}} # The numbers for Appendix 1 will appear as Table A.1, Table A.2...
+  - \setcounter{figure}{0}
+  - \renewcommand{\thefigure}{A1.\arabic{figure}}}
+---
+<!-- Here we create our personalised title page -->
+<!-- vspace sets the vertical space from the previous line, so the distance from the previous line -->
+<!-- We first begin by centering the entire writing on the page -->
+\begin{centering} 
+
+\Huge
+{\bf This is the title of the thesis. The command bf allows to set it to bold. Huge sets it to the maximal size}
+
+\vspace{5cm}
+\huge
+{Full Name}
+
+\LARGE
+{Doctor of Philosophy}
+
+\vspace{-0.5cm}
+\LARGE
+{in Cognitive Neuroscience and Neuroimaging or Psychology}
+
+\vspace{4cm}
+\LARGE
+{University of York}
+
+\vspace{-0.5cm}
+\LARGE
+{Psychology}
+
+\vspace{1cm}
+\LARGE
+{Month and year of submission}
+
+\end{centering} <!-- This ends the centering so that only the title page is centred. -->
+
+```{r setup, include=FALSE}
+
+processdata <- 0  # This flag determines the amount of processing:
+# 0 - Do no processing, generate the pdf using existing versions of all figures
+# 1 - Generate figures using the processed group data
+# 2 - Average data across participants
+# 3 - Analyse all raw data
+
+localdir <- 'local/'    # All files are stored in the thsis directory /local/
+
+rawdir <- 'local/rawdata/'    # The document will load the raw data from here
+
+figdir <- 'Figures/'     # The document will save and load figures from here
+
+datadir <- 'local/processeddata/'     # The document will save and load the processed data from here
+
+# You should add all packages needed for data analysis and plotting figures. The script will check which packages are installed, install the missing ones, and activate.
+packagelist <- c('knitr') # list of CRAN packages
+
+missingpackages <- packagelist[!packagelist %in% installed.packages()[,1]]
+if (length(missingpackages)>0){install.packages(missingpackages,repos = "http://cran.us.r-project.org")}
+if (!'FourierStats' %in% installed.packages()[,1]){remotes::install_github("bakerdh/FourierStats")}
+packagelist <- c(packagelist,'FourierStats')
+toinstall <- packagelist[which(!packagelist %in% (.packages()))]
+invisible(lapply(toinstall,library,character.only=TRUE))
+
+# This package is needed to create tables in a specific place of the text. It can only be installed from github, so it cannot be included in the previous list and it need to be installed individually.
+devtools::install_github("kupietz/kableExtra")
+library(kableExtra)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+\pagebreak <!-- Inserts a pagebreak -->
+\pagenumbering{arabic} <!-- Defines the style of the page numbers -->
+\setcounter{page}{2} <!-- Starts the page numbers from the second page. You can change it to any other number from which you want to start counting. -->
+
+# Abstract {-}
+<!-- This is our abstract page. {-} allows us to not number the section. -->
+
+\pagebreak
+
+<!-- The following chunk of code creates the ToC, LoF and LoT. The ToC can be created by setting the "toc" command at the beginning to "yes". However, this will create it after the title and you won't be able to move it anywhere else in the text. With the following chunk, you can create the ToC wherever you want within your text by copying the chunk in the place where you want it. -->
+```{=latex}
+\setcounter{tocdepth}{5}
+\tableofcontents
+\pagebreak
+\listoffigures
+\pagebreak
+\listoftables
+```
+
+\pagebreak
+# Acknowledgements {-}
+
+\pagebreak
+# Author's Declaration {-}
+
+\pagebreak
+# Supervisor’s Statement {-}
+
+\pagebreak
+\chapterone 
+<!-- The command \chapterone starts the personalised numbering of figures and tables for this specific chapter. -->
+# Chapter 1: Title of the chapter
+
+## Section title
+
+We write some text here.
+
+To start a new paragraph, you need to leave a blank line between the previous paragraph and the new paragraph.
+
+You might need to include footnotes.^[This is how you include a footnote. The text within the square brackets will appear in the footnote.]
+
+>You might want to indent an entire paragraph and not only the first: by using the '>' symbol, the entire paragraph will be indented. The size of the indentadion is determined by the parindent{} command in the header-includes section at the beginning.
+
+### Subsection title
+
+Some more text here.
+
+#### Subsection level 4 no hspace
+
+R markdown works perfectly up to the third level of section numbering. From the fourth, however, it is not able to format correctly and writes this sentence next to the subsection title, as shown by this sentence. To stop it from doing this, we use the "hspace" command (an example is shown in the next section).
+
+#### Subsection level 4 hspace
+
+\hspace{-2.5em}Hspace places the new paragraph on a new line.
+
+##### Subsection level 5
+
+\hspace{-2.5em} Here is an example of how to write an equation:
+
+\begin{equation}
+\label{eq:example}
+B = \sqrt{R^2+L^2},
+\end{equation}
+
+\noindent Using "noindent" allows you to remove the initial indent for this paragraph.
+
+By using the following command, you can refer to your figure and R markdown will keep the count automatically: see example in Figure \@ref(fig:examplefig1). Additionally, R markdown creates hyperlinks to figures, tables and references, so that, if you click on them, it will take you directly to the figure, table or reference within the reference list. Figures and tables are automatically added to your LoF and LoT.
+
+There are different ways to reference. To include a reference, use the cite key of the reference. I would suggest to format the cite key as \@AuthorDate, so this is what it looks like: @Author2023. As you can see, the reference in the PDF appears as Author (date). To have the reference appear as (Author, date), use square brackets: [@Author2023]. In APA style, if two references have the same authors, R markdown will write them as (Author, date1; date2) automatically: [@Author2023; @Author2024]. To include more references within one square bracket, use a semicolon: [@Author2023; @Author2024; @Author2025]. You can also include some text within a square bracket and a reference. Make sure to use a semicolon between the references if you include multiple ones: [here is an example, @Author2025; @Author2026]. Markdown will automatically compile the reference list at the end of the document.
+
+```{r examplefig1, fig.cap="Figure example. This is how we include a figure in teh text with a caption. With fig.align, you can decide wether to left-aling, right-align or centre it relative to the page. With out.width you can plot your figure in a smaller size than its original size.", fig.align="center", out.width = '70%', echo=FALSE}
+
+knitr::include_graphics(paste0(figdir,'Example1.pdf'))
+```
+
+Finally, here is an example for a table (Table \@ref(tab:exampletable1)).
+
+```{r exampletable1, echo=FALSE}
+
+exptnames <- c('Number 1','Number 2')
+zlist <- c(1,1)
+klist <- c(2,2)
+
+tabledata <- data.frame(exptnames,zlist,klist)
+
+colnames(tabledata) <- c('Numbers','Ones','Twos')
+kable(tabledata, align='lcc',caption = 'Table example. With the command align you can choose how to aling each column. The next lign of code within this chunk allows you to stick the table exactly where you created it.')%>%
+  kable_styling(latex_options='HOLD_position')
+```
+
+\pagebreak
+# Chapter 2: Title of the chapter
+
+## Section title
+
+## Section title
+
+## Section title
+
+## Section title
+
+\pagebreak
+# Chapter 3: Title of the chapter
+
+## Section title
+
+## Section title
+
+## Section title
+
+## Section title
+
+\pagebreak
+# Chapter 4: Title of the chapter
+
+## Section title
+
+## Section title
+
+## Section title
+
+## Section title
+
+\pagebreak
+# Chapter 5: Title of the chapter
+
+## Section title
+
+## Section title
+
+## Section title
+
+## Section title
+
+\pagebreak
+\beginsupplementAone
+<!-- The command \beginsupplementAone starts the personalised numbering of figures and tables for this other chapter. -->
+# Appendix 1 {-}
+
+Here is an example of another figure (Figure \@ref(fig:examplefig2)) and another table (Table \@ref(tab:exampletable2)) to show you that the numbering changed for this section.
+
+```{r examplefig2, fig.cap="Figure example for appendix. The figure count is reset for the appendix with the command used at the beginning, so this figure is the first and is set to be A1.1.", fig.align="center", out.width = '80%', echo=FALSE}
+
+knitr::include_graphics(paste0(figdir,'Example2.pdf'))
+```
+
+```{r exampletable2, echo=FALSE}
+
+exptnames <- c('Number 3','Number 4')
+zlist <- c(3,3)
+klist <- c(4,4)
+
+tabledata <- data.frame(exptnames,zlist,klist)
+
+colnames(tabledata) <- c('Numbers','Threes','Fours')
+kable(tabledata, align='lcc',caption = 'Table example 2. Similar to the figure count, the table count is reset and this is the first table.')%>%
+  kable_styling(latex_options='HOLD_position')
+```
+
+\pagebreak
+# References
+
+
