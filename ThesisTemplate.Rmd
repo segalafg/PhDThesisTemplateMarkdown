@@ -42,10 +42,6 @@ header-includes:
 \LARGE
 {Doctor of Philosophy}
 
-\vspace{-0.5cm}
-\LARGE
-{in Cognitive Neuroscience and Neuroimaging or Psychology}
-
 \vspace{4cm}
 \LARGE
 {University of York}
